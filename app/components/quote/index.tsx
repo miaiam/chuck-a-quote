@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Button from "../button";
 import LoadingSpinner from "../loading-spinner";
 
@@ -9,17 +9,22 @@ const API_ROUTE = `https://api.chucknorris.io/jokes/random?category=${CATEGORY}`
 
 const Quote = () => {
   const [quote, setQuote] = useState<string|null>(null);
+  const initialized = useRef(false)
 
-  useEffect(() => {
-    getQuote();
-  }, []);
-  
-  async function getQuote() {
+  const getQuote = useCallback(async () => {
     setQuote(null);
     const res = await fetch(API_ROUTE);
     const data = await res.json();
     setQuote(data?.value);
-  }
+  }, []);
+  
+  useEffect(() => {
+    // only call useEffect once
+    if (!initialized.current) {
+      initialized.current = true
+      getQuote();
+    }
+  }, []);
 
   if (!quote) return <div className="flex md:items-center justify-center"><LoadingSpinner/></div>
 
