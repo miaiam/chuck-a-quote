@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "../button";
+import LoadingSpinner from "../loading-spinner";
 
 const CATEGORY = "dev";
 const API_ROUTE = `https://api.chucknorris.io/jokes/random?category=${CATEGORY}`;
@@ -14,10 +15,13 @@ const Quote = () => {
   }, []);
   
   async function getQuote() {
+    setQuote(null);
     const res = await fetch(API_ROUTE);
     const data = await res.json();
     setQuote(data?.value);
   }
+
+  if (!quote) return <div className="flex md:items-center justify-center"><LoadingSpinner/></div>
 
   return (
     <div className="flex flex-col items-center gap-4 md:justify-center md:gap-6">
