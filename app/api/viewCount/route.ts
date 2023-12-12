@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from '@/helpers/db';
 
+export type ResponseBody = {message: string, viewCount: number}
+
 export async function PATCH(
   req: Request
-) {
+): Promise<NextResponse<ResponseBody>> {
   const { id } = await req.json();
 
   const viewCount = await prisma.pageVisits.update({
