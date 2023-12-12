@@ -3,12 +3,15 @@ import { ResponseBody } from "@/app/api/viewCount/route";
 import { updateViewCount } from "@/helpers/actions";
 import { useEffect, useState, useRef, useCallback } from "react";
 
+// id of the first row in the PageVisits Table
+const ROW_ID = 1;
+
 const Footer = () => {
-  const [views, setViews] = useState<number>(0);
+  const [views, setViews] = useState<number|null>(null);
   const initialized = useRef(false)
-  
+
   const updateAndFetchCounter = useCallback(async () => {
-    const data = await updateViewCount();
+    const data = await updateViewCount(ROW_ID);
     const json: ResponseBody = await data.json();
     setViews(json.viewCount);
   }, []);
